@@ -6,11 +6,11 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/10 13:52:10 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/10 20:48:39 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../philo.h"
 
 philo_t *philo_new(int nb, t_data *data)
 {
@@ -20,13 +20,15 @@ philo_t *philo_new(int nb, t_data *data)
 	if (!new)
 		return (NULL);
 	new->id = nb;
-	new->time_die = 0;
 	new->time_eat = 0;
-	new->time_sleep = 0;
 	new->forks = 0;
+	new->sleep = 0;
+
+	//new->eat_time = ;
 	new->next = NULL;
 	new->prev = NULL;
 	new->data = data;
+	pthread_mutex_init(&new->fork, NULL);
 	return (new);
 }
 
@@ -39,7 +41,7 @@ philo_t *philo_init(int argc, char **argv)
 	philo_t *tmp2;
 	int	nb_philo;
 	int	i;
-	
+
 	i = 1;
 	nb_philo = atoi(argv[1]);
 	data = malloc(sizeof(t_data));
