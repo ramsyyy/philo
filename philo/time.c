@@ -1,34 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/09 15:33:04 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/10 14:15:10 by raaga            ###   ########.fr       */
+/*   Created: 2022/03/10 14:00:31 by raaga             #+#    #+#             */
+/*   Updated: 2022/03/10 14:58:06 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/time.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <stdlib.h>
+#include "philo.h"
 
-
-
-int main(int argc, char **argv)
+long get_time(struct timeval previous_time)
 {
-	struct timeval current_time;
+    struct timeval current_time;
+    long time;
 
-
-	gettimeofday(&current_time, NULL);
-	printf("%ld  \n", current_time.tv_sec);
-	//usleep(1000 * (1000));
-
-
-	gettimeofday(&current_time, NULL);
-	printf("%ld  \n", current_time.tv_sec);
-	return (0);
+    
+    gettimeofday(&current_time, NULL);
+    time = (current_time.tv_sec - previous_time.tv_sec) * 1000; 
+    current_time.tv_usec = (current_time.tv_usec - previous_time.tv_usec) / 1000;
+    time += current_time.tv_usec;
+    return (time);
 }

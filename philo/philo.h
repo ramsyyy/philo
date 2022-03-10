@@ -7,20 +7,6 @@
 # include <pthread.h>
 # include <stdlib.h>
 
-typedef struct philo_s philo_t;
-struct philo_s{
-	int id;
-	pthread_t philo;
-	int eat;
-	int time_die;
-	int time_eat;
-	int time_sleep;
-	int forks;
-	pthread_mutex_t fork;
-	philo_t *next;
-	philo_t *prev;
-};
-
 typedef struct s_data t_data;
 struct s_data{
 	int time_to_die;
@@ -30,6 +16,20 @@ struct s_data{
 	int philo_die;
 };
 
-philo_t *philo_init(char **argv);
+typedef struct philo_s philo_t;
+struct philo_s{
+	int id;
+	pthread_t philo;
+	int eat;
+	int time_eat;
+	int forks;
+	pthread_mutex_t fork;
+	philo_t *next;
+	philo_t *prev;
+	t_data *data;
+};
+
+philo_t *philo_init(int argc, char **argv);
+long get_time(struct timeval previous_time);
 
 #endif
