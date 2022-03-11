@@ -2,7 +2,7 @@ CC = gcc
 
 NAME = philo
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror 
 
 OBJ := $(.c=.o)
 
@@ -16,7 +16,7 @@ all : $(NAME)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 $(NAME): $(OBJ)
-		${CC}  ${SRC} $(UTILS) $(PRINTFNAME) -o ${NAME}
+		${CC} -pthread ${SRC} $(UTILS) $(PRINTFNAME) -o ${NAME}
 
 clean:
 		rm -rf *.o

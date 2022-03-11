@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/10 20:48:39 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/11 21:17:23 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ philo_t *philo_new(int nb, t_data *data)
 	new->forks = 0;
 	new->sleep = 0;
 
-	//new->eat_time = ;
+	gettimeofday(&new->eat_time, NULL);
 	new->next = NULL;
 	new->prev = NULL;
 	new->data = data;

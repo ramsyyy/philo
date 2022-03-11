@@ -6,13 +6,13 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/10 20:49:01 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/11 21:19:34 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-/*
+
 int	take_forks(philo_t *philo, long time, struct timeval start_time)
 {
 	long time2;
@@ -87,4 +87,4 @@ void	think(philo_t *philo, struct timeval start_time)
 		exit(0);
 	}
 	printf("%ld %d is thinking\n", time , philo->id);
-}*/
+}

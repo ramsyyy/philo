@@ -27,7 +27,7 @@ struct philo_s{
 	pthread_mutex_t fork;
 	philo_t *next;
 	philo_t *prev;
-	struct timeval *eat_time;
+	struct timeval eat_time;
 	t_data *data;
 };
 
