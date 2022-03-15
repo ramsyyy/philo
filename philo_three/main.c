@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/15 18:07:00 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/15 22:06:51 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,11 @@
 
 void	ft_usleep(int i)
 {
-	int time;
 	struct timeval usleep;
 
-	time = 0;
 	gettimeofday(&usleep, NULL);
-	while (i/1000 > time)
-	{
-		time = get_time(usleep);
-	}
+	while (i/1000 > get_time(usleep))
+	{}
 }
 
 void	*routine(void *philo)
@@ -41,32 +37,52 @@ void	*routine(void *philo)
 	{
 		time = get_time(start_time);
 		fork = take_forks(filo, time, start_time);
-		//printf ("gfds %d\n", fork);
-		if (fork == 1 || fork == 2)
+		time = get_time(start_time);
+		eat(filo, fork, start_time);
+		time = get_time(start_time);
+		sleeping(filo, fork, start_time);
+		think(filo, start_time);
+	}
+}
+
+void	*mort(void *philo)
+{
+	philo_t *filo;
+	struct timeval start;
+
+	int time;
+	int time2;
+
+	filo = (philo_t *)philo;
+	gettimeofday(&start, NULL);
+	while (1)
+	{
+			time += get_time(filo->eat_time);
+
+		time2 = get_time(start);
+		if (time >= filo->data->time_to_die)
 		{
-			time = get_time(start_time);
-			eat(filo, fork, start_time);
-			time = get_time(start_time);
-			sleeping(filo, fork, start_time);
-			think(filo, start_time);
+			pthread_mutex_lock(&filo->data->printf);
+			ft_printf("%d %d died\n", time2, filo->id);
+			exit(0);
+			pthread_mutex_unlock(&filo->data->printf);
+		}
+		else
+		{
+			time = 0;
+			filo = filo->next;
 		}
 	}
 }
+
 
 int main(int argc, char **argv)
 {
 
 	philo_t *philo;
+	pthread_t mortt;
 	int i;
-	//struct timeval test;
 
-	/*gettimeofday(&test, NULL);
-	printf("%ld  \n", test.tv_sec);
-	ft_usleep(1000 * 1000);
-
-
-	gettimeofday(&test, NULL);
-	printf("%ld  \n", test.tv_sec);*/
 	if (argc < 5 || argc > 6)
 		return (0);
 	i = atoi(argv[1]);
@@ -80,10 +96,12 @@ int main(int argc, char **argv)
 		i--;
 		philo = philo->next;
 	}
+	pthread_create(&mortt, NULL, mort, philo);
 	while (++i <= atoi(argv[1]))
 	{
 		pthread_join(philo->philo, NULL);
 		philo = philo->next;
 	}
+	pthread_join(mortt, NULL);
 	return (0);
 }

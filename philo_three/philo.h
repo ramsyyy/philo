@@ -38,7 +38,7 @@ philo_t *philo_init(int argc, char **argv);
 int get_time(struct timeval previous_time);
 int	take_forks(philo_t *philo, int time, struct timeval start_time);
 int	send_forks(philo_t *philo, int fork);
-int	eat(philo_t *philo, int fork, struct timeval start_time);
+void	eat(philo_t *philo, int fork, struct timeval start_time);
 int	sleeping(philo_t *philo, int fork, struct timeval start_time);
 void	think(philo_t *philo, struct timeval time);
 void	ft_usleep(int i);
