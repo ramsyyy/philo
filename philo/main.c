@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/11 21:19:12 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/14 19:56:19 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,24 @@ void	*routine(void *philo)
 	int	nb_each;
 	int fork;
 	long time;
-
-	gettimeofday(&start_time, NULL);
-	time = get_time(start_time);
-	nb_each = 0;
+	
 	filo = (philo_t *)philo;
-	fork = take_forks(filo, time, start_time);
-	if (fork == 1)
+	gettimeofday(&start_time, NULL);
+	nb_each = 0;
+	while (1)
+	{
 		time = get_time(start_time);
-	eat(filo, fork, time);
-	time = get_time(start_time);
-	sleeping(filo, fork, time);
-	think(filo, start_time);
-	return (philo);
+		fork = take_forks(filo, time, start_time);
+		//printf ("gfds %d\n", fork);
+		if (fork == 1)
+		{
+			time = get_time(start_time);
+			eat(filo, fork, time);
+			time = get_time(start_time);
+			sleeping(filo, fork, time);
+			think(filo, start_time);
+		}
+	}
 }
 
 int main(int argc, char **argv)

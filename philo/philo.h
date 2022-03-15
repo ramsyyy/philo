@@ -19,6 +19,7 @@ struct s_data{
 typedef struct philo_s philo_t;
 struct philo_s{
 	int id;
+	long time2;
 	pthread_t philo;
 	int eat;
 	int time_eat;
