@@ -6,20 +6,23 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/16 21:05:44 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/16 22:23:33 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_usleep(long int i)
+void	ft_usleep(long int i, philo_t *philo)
 {
 	long int time;
 
 	//gettimeofday(&usleep, NULL);
 	time = actual_time();
 	while (actual_time() - time < i)
-	{}
+	{
+		if (philo->data->dead == 1)
+			exit(0);
+	}
 }
 
 void	*routine(void *philo)
@@ -30,7 +33,7 @@ void	*routine(void *philo)
 
 	filo = (philo_t *)philo;
 	if (filo->id % 2 == 0)
-		usleep(100);
+		ft_usleep(1);
 	nb_each = 0;
 	while (1)
 	{
@@ -53,6 +56,7 @@ void	*mort(void *philo)
 	{
 		if (actual_time() - time >= filo->data->time_to_die)
 		{
+			filo->data->dead = 1;
 			pthread_mutex_lock(&filo->data->printf);
 			time2 = actual_time() - filo->data->start;
 			printf("%d %d died\n", time2, filo->id);
@@ -81,20 +85,14 @@ int main(int argc, char **argv)
 	i = 1;
 	if (i <= 0 || i > 200)
 		return (0);
-
-	/*printf("QWE %ld\n", actual_time());
-	ft_usleep(1000);
-	//usleep(1000000);
-	printf("QWE %ld\n", actual_time());*/
-
 	nb = atoi(argv[1]);
 	philo = philo_init(argc, argv);
-	//gettimeofday(&philo->data->start_time, NULL);
 	philo->data->start = actual_time();
+	philo->data->dead = 0;
 	while (i <= nb)
 	{
-		pthread_create(&philo->philo, NULL, routine , philo);
 		pthread_create(&mortt, NULL, mort, philo);
+		pthread_create(&philo->philo, NULL, routine , philo);
 		philo = philo->next;
 		i++;
 	}

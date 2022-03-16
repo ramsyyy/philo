@@ -19,6 +19,7 @@ struct s_data{
 	pthread_mutex_t printfpair;
 	struct timeval start_time;
 	long int start;
+	int dead;
 };
 
 typedef struct philo_s philo_t;
@@ -45,7 +46,7 @@ void	send_forks(philo_t *philo);
 void	eat(philo_t *philo, struct timeval start_time);
 void	sleeping(philo_t *philo, struct timeval start_time);
 void	think(philo_t *philo, struct timeval time);
-void	ft_usleep(long int i);
+void	ft_usleep(long int i, philo_t *philo);
 long int actual_time();
 
 #endif
