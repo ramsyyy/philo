@@ -6,71 +6,63 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/15 22:06:51 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/16 21:05:44 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_usleep(int i)
+void	ft_usleep(long int i)
 {
-	struct timeval usleep;
+	long int time;
 
-	gettimeofday(&usleep, NULL);
-	while (i/1000 > get_time(usleep))
+	//gettimeofday(&usleep, NULL);
+	time = actual_time();
+	while (actual_time() - time < i)
 	{}
 }
 
 void	*routine(void *philo)
 {
 	philo_t *filo;
-	struct timeval start_time;
-	struct timeval current_time;
 	int	nb_each;
-	int fork;
 	long time;
 
 	filo = (philo_t *)philo;
-	gettimeofday(&start_time, NULL);
+	if (filo->id % 2 == 0)
+		usleep(100);
 	nb_each = 0;
 	while (1)
 	{
-		time = get_time(start_time);
-		fork = take_forks(filo, time, start_time);
-		time = get_time(start_time);
-		eat(filo, fork, start_time);
-		time = get_time(start_time);
-		sleeping(filo, fork, start_time);
-		think(filo, start_time);
+		take_forks(filo, filo->data->start_time);
+		eat(filo, filo->data->start_time);
+		sleeping(filo, filo->data->start_time);
+		think(filo, filo->data->start_time);
 	}
 }
 
 void	*mort(void *philo)
 {
 	philo_t *filo;
-	struct timeval start;
-
-	int time;
+	long int time;
 	int time2;
 
 	filo = (philo_t *)philo;
-	gettimeofday(&start, NULL);
+	time = actual_time();
 	while (1)
 	{
-			time += get_time(filo->eat_time);
-
-		time2 = get_time(start);
-		if (time >= filo->data->time_to_die)
+		if (actual_time() - time >= filo->data->time_to_die)
 		{
 			pthread_mutex_lock(&filo->data->printf);
-			ft_printf("%d %d died\n", time2, filo->id);
+			time2 = actual_time() - filo->data->start;
+			printf("%d %d died\n", time2, filo->id);
 			exit(0);
 			pthread_mutex_unlock(&filo->data->printf);
 		}
 		else
 		{
-			time = 0;
-			filo = filo->next;
+			if (filo->eattime > 0)
+				time = filo->eattime;
 		}
 	}
 }
@@ -82,26 +74,39 @@ int main(int argc, char **argv)
 	philo_t *philo;
 	pthread_t mortt;
 	int i;
+	int nb;
 
 	if (argc < 5 || argc > 6)
 		return (0);
-	i = atoi(argv[1]);
+	i = 1;
 	if (i <= 0 || i > 200)
 		return (0);
+
+	/*printf("QWE %ld\n", actual_time());
+	ft_usleep(1000);
+	//usleep(1000000);
+	printf("QWE %ld\n", actual_time());*/
+
+	nb = atoi(argv[1]);
 	philo = philo_init(argc, argv);
-	while (i > 0)
+	//gettimeofday(&philo->data->start_time, NULL);
+	philo->data->start = actual_time();
+	while (i <= nb)
 	{
 		pthread_create(&philo->philo, NULL, routine , philo);
-		ft_usleep(500);
-		i--;
+		pthread_create(&mortt, NULL, mort, philo);
 		philo = philo->next;
+		i++;
 	}
-	pthread_create(&mortt, NULL, mort, philo);
-	while (++i <= atoi(argv[1]))
+	i--;
+	while (i > 0)
 	{
+
 		pthread_join(philo->philo, NULL);
+		pthread_join(mortt, NULL);
 		philo = philo->next;
+		i--;
 	}
-	pthread_join(mortt, NULL);
+
 	return (0);
 }

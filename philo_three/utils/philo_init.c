@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/15 19:01:46 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/16 20:55:23 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,11 @@ philo_t *philo_new(int nb, t_data *data)
 	new->sleep = 0;
 
 	new->eat_time = (struct timeval){ 0 };
-	gettimeofday(&new->eat_time, NULL);
 	new->next = NULL;
 	new->prev = NULL;
 	new->data = data;
+	new->data->start_time = (struct timeval){ 0 };
+	new->eattime = 0;
 	pthread_mutex_init(&new->fork, NULL);
 	return (new);
 }
