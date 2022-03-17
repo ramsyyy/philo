@@ -27,6 +27,7 @@ struct philo_s{
 	int id;
 	int time2;
 	pthread_t philo;
+	pthread_t mortt;
 	int eat;
 	int time_eat;
 	int forks;

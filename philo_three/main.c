@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/16 22:23:33 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/17 01:09:17 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ void	ft_usleep(long int i, philo_t *philo)
 	time = actual_time();
 	while (actual_time() - time < i)
 	{
-		if (philo->data->dead == 1)
-			exit(0);
 	}
 }
 
@@ -33,7 +31,7 @@ void	*routine(void *philo)
 
 	filo = (philo_t *)philo;
 	if (filo->id % 2 == 0)
-		ft_usleep(1);
+		ft_usleep(5, filo);
 	nb_each = 0;
 	while (1)
 	{
@@ -65,6 +63,7 @@ void	*mort(void *philo)
 		}
 		else
 		{
+			
 			if (filo->eattime > 0)
 				time = filo->eattime;
 		}
@@ -76,7 +75,7 @@ int main(int argc, char **argv)
 {
 
 	philo_t *philo;
-	pthread_t mortt;
+	
 	int i;
 	int nb;
 
@@ -91,20 +90,27 @@ int main(int argc, char **argv)
 	philo->data->dead = 0;
 	while (i <= nb)
 	{
-		pthread_create(&mortt, NULL, mort, philo);
+		//
 		pthread_create(&philo->philo, NULL, routine , philo);
+		
 		philo = philo->next;
 		i++;
 	}
-	i--;
-	while (i > 0)
+	i = 1;
+	while (i <= nb)
 	{
-
-		pthread_join(philo->philo, NULL);
-		pthread_join(mortt, NULL);
+		pthread_create(&philo->mortt, NULL, mort, philo);
 		philo = philo->next;
-		i--;
+		pthread_join(philo->mortt, NULL);
+		i++;
 	}
-
+	i = 1;
+	while (i <= nb)
+	{
+		pthread_join(philo->philo, NULL);
+		//pthread_join(philo->mortt, NULL);
+		philo = philo->next;
+		i++;
+	}
 	return (0);
 }
