@@ -8,6 +8,12 @@
 # include <stdlib.h>
 # include "./ft_printf/ft_printf.h"
 
+# define EAT "is eating"
+# define FORK "has taken a fork"
+# define SLEEP "is sleeping"
+# define THINK " is thinking"
+# define DEAD " died"
+
 typedef struct s_data t_data;
 struct s_data{
 	int time_to_die;
@@ -44,12 +50,11 @@ struct philo_s{
 
 philo_t *philo_init(int argc, char **argv);
 long int	get_time(struct timeval previous_time);
-int	take_forks(philo_t *philo, struct timeval start_time);
-int	eat(philo_t *philo, struct timeval start_time);
-int	sleeping(philo_t *philo, struct timeval start_time);
-int	think(philo_t *philo, struct timeval time);
+void	take_forks(philo_t *philo, struct timeval start_time);
+void	sleeping(philo_t *philo);
 void	ft_usleep(long int i, philo_t *philo, long int time);
 long int actual_time();
 int check_stop(t_data *data);
+void msg(philo_t *philo, char *msg);
 
 #endif
