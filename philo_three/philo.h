@@ -15,7 +15,7 @@ struct s_data{
 	int time_to_sleep;
 	int nb_to_each;
 	pthread_mutex_t printf;
-	pthread_mutex_t mutex;
+
 	struct timeval start_time;
 	long int start;
 	int dead;
@@ -27,6 +27,7 @@ struct philo_s{
 	int time2;
 	pthread_t philo;
 	pthread_t mortt;
+	pthread_mutex_t change_var;
 	int eat;
 	int time_eat;
 	int forks;
@@ -37,6 +38,7 @@ struct philo_s{
 	struct timeval eat_time;
 	long int eattime;
 	t_data *data;
+
 };
 
 philo_t *philo_init(int argc, char **argv);
@@ -46,7 +48,7 @@ void	send_forks(philo_t *philo);
 void	eat(philo_t *philo, struct timeval start_time);
 void	sleeping(philo_t *philo, struct timeval start_time);
 void	think(philo_t *philo, struct timeval time);
-void	ft_usleep(long int i, philo_t *philo);
+void	ft_usleep(long int i, philo_t *philo, long int time);
 long int actual_time();
 
 #endif

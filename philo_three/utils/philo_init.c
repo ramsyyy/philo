@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/18 00:37:10 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/03/18 12:25:45 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ philo_t *philo_new(int nb, t_data *data)
 	new->data = data;
 	new->data->start_time = (struct timeval){ 0 };
 	new->eattime = actual_time();
-	
+	pthread_mutex_init(&new->change_var, NULL);
 	pthread_mutex_init(&new->fork, NULL);
 	return (new);
 }
@@ -51,6 +51,7 @@ philo_t *philo_init(int argc, char **argv)
 	data->time_to_die = atoi(argv[2]);
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
+	data->dead = 0;
 	pthread_mutex_init(&data->printf, NULL);
 	if(argc == 6)
 		data->nb_to_each = atoi(argv[5]);
