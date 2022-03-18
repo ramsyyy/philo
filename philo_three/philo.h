@@ -15,10 +15,11 @@ struct s_data{
 	int time_to_sleep;
 	int nb_to_each;
 	pthread_mutex_t printf;
-
+	pthread_mutex_t mutex;
 	struct timeval start_time;
 	long int start;
 	int dead;
+	int nb;
 };
 
 typedef struct philo_s philo_t;
@@ -43,12 +44,12 @@ struct philo_s{
 
 philo_t *philo_init(int argc, char **argv);
 long int	get_time(struct timeval previous_time);
-void	take_forks(philo_t *philo, struct timeval start_time);
-void	send_forks(philo_t *philo);
-void	eat(philo_t *philo, struct timeval start_time);
-void	sleeping(philo_t *philo, struct timeval start_time);
-void	think(philo_t *philo, struct timeval time);
+int	take_forks(philo_t *philo, struct timeval start_time);
+int	eat(philo_t *philo, struct timeval start_time);
+int	sleeping(philo_t *philo, struct timeval start_time);
+int	think(philo_t *philo, struct timeval time);
 void	ft_usleep(long int i, philo_t *philo, long int time);
 long int actual_time();
+int check_stop(t_data *data);
 
 #endif

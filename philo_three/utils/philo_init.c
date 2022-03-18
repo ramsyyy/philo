@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/18 12:25:45 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/18 16:17:25 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ philo_t *philo_init(int argc, char **argv)
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
 	data->dead = 0;
+	data->nb = atoi(argv[1]);
 	pthread_mutex_init(&data->printf, NULL);
+	pthread_mutex_init(&data->mutex, NULL);
 	if(argc == 6)
 		data->nb_to_each = atoi(argv[5]);
 	while (i <= nb_philo)
