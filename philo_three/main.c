@@ -6,7 +6,7 @@
 /*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/17 01:09:17 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/03/18 01:11:08 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,18 @@ void	*routine(void *philo)
 
 	filo = (philo_t *)philo;
 	if (filo->id % 2 == 0)
-		ft_usleep(5, filo);
+		ft_usleep(100, filo);
 	nb_each = 0;
 	while (1)
 	{
+		if (filo->data->dead == 1)
+			break ;
 		take_forks(filo, filo->data->start_time);
 		eat(filo, filo->data->start_time);
 		sleeping(filo, filo->data->start_time);
 		think(filo, filo->data->start_time);
 	}
+	return (philo);
 }
 
 void	*mort(void *philo)
@@ -52,22 +55,29 @@ void	*mort(void *philo)
 	time = actual_time();
 	while (1)
 	{
+		time = filo->eattime;
+		pthread_mutex_lock(&filo->data->mutex);			
+			if (filo->data->dead == 1)
+				break ;
+		pthread_mutex_unlock(&filo->data->mutex);
 		if (actual_time() - time >= filo->data->time_to_die)
 		{
-			filo->data->dead = 1;
+			pthread_mutex_lock(&filo->data->mutex);			
+			if (filo->data->dead == 1)
+				break ;
+			else
+				filo->data->dead = 1;
+			pthread_mutex_unlock(&filo->data->mutex);
+			
 			pthread_mutex_lock(&filo->data->printf);
 			time2 = actual_time() - filo->data->start;
 			printf("%d %d died\n", time2, filo->id);
-			exit(0);
 			pthread_mutex_unlock(&filo->data->printf);
-		}
-		else
-		{
-			
-			if (filo->eattime > 0)
-				time = filo->eattime;
+			return (filo);
 		}
 	}
+	pthread_mutex_unlock(&filo->data->mutex);
+	return (filo);
 }
 
 

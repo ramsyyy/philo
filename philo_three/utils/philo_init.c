@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/16 22:22:00 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/18 00:37:10 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ philo_t *philo_new(int nb, t_data *data)
 	new->prev = NULL;
 	new->data = data;
 	new->data->start_time = (struct timeval){ 0 };
-	new->eattime = 0;
+	new->eattime = actual_time();
 	
 	pthread_mutex_init(&new->fork, NULL);
 	return (new);

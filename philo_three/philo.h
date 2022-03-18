@@ -16,7 +16,7 @@ struct s_data{
 	int nb_to_each;
 	int philo_die;
 	pthread_mutex_t printf;
-	pthread_mutex_t printfpair;
+	pthread_mutex_t mutex;
 	struct timeval start_time;
 	long int start;
 	int dead;
