@@ -6,7 +6,7 @@
 /*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/18 01:11:08 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/03/18 10:26:24 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,33 @@ void	*routine(void *philo)
 	nb_each = 0;
 	while (1)
 	{
-		if (filo->data->dead == 1)
-			break ;
+		pthread_mutex_lock(&filo->data->mutex);			
+			if (filo->data->dead == 1)
+				break ;
+		pthread_mutex_unlock(&filo->data->mutex);
 		take_forks(filo, filo->data->start_time);
 		eat(filo, filo->data->start_time);
 		sleeping(filo, filo->data->start_time);
 		think(filo, filo->data->start_time);
 	}
+	free((philo_t *) philo);
 	return (philo);
+}
+
+void	free_philo(philo_t *philo)
+{
+	while (philo && philo->next)
+	{
+		//pthread_detach(philo->philo);
+		/*if (philo->next)
+		{
+			philo = philo->next;
+			free(philo->prev);
+		}
+		if (!philo->next)*/
+			free(philo);
+	}
+	
 }
 
 void	*mort(void *philo)
@@ -61,22 +80,24 @@ void	*mort(void *philo)
 				break ;
 		pthread_mutex_unlock(&filo->data->mutex);
 		if (actual_time() - time >= filo->data->time_to_die)
-		{
-			pthread_mutex_lock(&filo->data->mutex);			
-			if (filo->data->dead == 1)
-				break ;
-			else
-				filo->data->dead = 1;
-			pthread_mutex_unlock(&filo->data->mutex);
-			
+		{	
 			pthread_mutex_lock(&filo->data->printf);
+				pthread_mutex_lock(&filo->data->mutex);			
+				if (filo->data->dead == 1)
+					break ;
+				else
+					filo->data->dead = 1;
+			pthread_mutex_unlock(&filo->data->mutex);
 			time2 = actual_time() - filo->data->start;
 			printf("%d %d died\n", time2, filo->id);
+			free((philo_t *) philo);
 			pthread_mutex_unlock(&filo->data->printf);
 			return (filo);
 		}
 	}
+	free((philo_t *) philo);
 	pthread_mutex_unlock(&filo->data->mutex);
+	pthread_mutex_unlock(&filo->data->printf);
 	return (filo);
 }
 

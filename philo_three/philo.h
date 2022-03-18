@@ -14,7 +14,6 @@ struct s_data{
 	int time_to_eat;
 	int time_to_sleep;
 	int nb_to_each;
-	int philo_die;
 	pthread_mutex_t printf;
 	pthread_mutex_t mutex;
 	struct timeval start_time;
