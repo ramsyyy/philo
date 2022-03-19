@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/18 21:01:29 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/19 23:17:31 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	*mort(void *philo)
 	time = actual_time();
 	while (check_stop(filo->data) == 0)
 	{
+		
 		if (actual_time() - time >= filo->data->time_to_die)
 		{	
 			msg(philo, DEAD);
@@ -65,6 +66,7 @@ void	*mort(void *philo)
 			pthread_mutex_unlock(&filo->data->mutex);
 			return (NULL);		
 		}
+		usleep(30);
 		pthread_mutex_lock(&filo->change_var);
 		time = filo->eattime;
 		pthread_mutex_unlock(&filo->change_var);
@@ -92,8 +94,8 @@ int main(int argc, char **argv)
 	philo->data->start = actual_time();
 	while (i <= nb)
 	{
-		pthread_create(&philo->mortt, NULL, mort, philo);
 		pthread_create(&philo->philo, NULL, routine , philo);
+		pthread_create(&philo->mortt, NULL, mort, philo);
 		philo = philo->next;
 		i++;
 	}

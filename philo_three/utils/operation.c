@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/18 21:01:25 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/19 23:14:53 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ void	take_forks(philo_t *philo, struct timeval start_time)
 	msg(philo, FORK);
 	pthread_mutex_lock(&philo->next->fork);
 	msg(philo, FORK);
+	msg(philo, EAT);
 	pthread_mutex_lock(&philo->change_var);
 	philo->eattime = actual_time();
 	pthread_mutex_unlock(&philo->change_var);
-	msg(philo, EAT);
 	ft_usleep(philo->data->time_to_eat, philo, actual_time());
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->next->fork);
