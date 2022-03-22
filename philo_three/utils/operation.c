@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   operation.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/19 23:14:53 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/22 15:06:51 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,10 @@ void msg(philo_t *philo, char *msg)
 		return ;
 	}
 	time = (actual_time() - philo->data->start);
-	ft_printf("%d %d %s\n", time ,philo->id, msg);
+	ft_putnbr(time);
+	write(1, " ", 1);
+	ft_putnbr(philo->id);
+	ft_putstr(msg);
 	pthread_mutex_unlock(&philo->data->printf);
 }
 
@@ -44,6 +47,7 @@ void	take_forks(philo_t *philo, struct timeval start_time)
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(&philo->next->fork);
 	sleeping(philo);
+	usleep(1000);
 }
 
 void	sleeping(philo_t *philo)

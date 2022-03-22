@@ -8,11 +8,11 @@
 # include <stdlib.h>
 # include "./ft_printf/ft_printf.h"
 
-# define EAT "is eating"
-# define FORK "has taken a fork"
-# define SLEEP "is sleeping"
-# define THINK " is thinking"
-# define DEAD " died"
+# define EAT " is eating\n"
+# define FORK " has taken a fork\n"
+# define SLEEP " is sleeping\n"
+# define THINK " is thinking\n"
+# define DEAD " died\n"
 
 typedef struct s_data t_data;
 struct s_data{

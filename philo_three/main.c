@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/19 23:17:31 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/22 15:05:30 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_usleep(long int i, philo_t *philo, long int time)
 	{
 		if (check_stop(philo->data) == 1)
 			break ;
-		usleep(40);
+		usleep(50);
 	}
 }
 
@@ -66,7 +66,7 @@ void	*mort(void *philo)
 			pthread_mutex_unlock(&filo->data->mutex);
 			return (NULL);		
 		}
-		usleep(30);
+		ft_usleep(30, filo, actual_time());
 		pthread_mutex_lock(&filo->change_var);
 		time = filo->eattime;
 		pthread_mutex_unlock(&filo->change_var);
