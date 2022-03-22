@@ -6,7 +6,7 @@
 /*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/22 15:06:51 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/03/22 15:24:54 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,11 @@ void	take_forks(philo_t *philo, struct timeval start_time)
 	pthread_mutex_unlock(&philo->change_var);
 	ft_usleep(philo->data->time_to_eat, philo, actual_time());
 	pthread_mutex_unlock(&philo->fork);
+	ft_usleep(2, philo, actual_time());
 	pthread_mutex_unlock(&philo->next->fork);
+	ft_usleep(2, philo, actual_time());
 	sleeping(philo);
-	usleep(1000);
+	
 }
 
 void	sleeping(philo_t *philo)

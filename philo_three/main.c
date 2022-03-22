@@ -6,7 +6,7 @@
 /*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/22 15:05:30 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/03/22 15:31:54 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_usleep(long int i, philo_t *philo, long int time)
 	{
 		if (check_stop(philo->data) == 1)
 			break ;
-		usleep(50);
+		usleep(30);
 	}
 }
 
@@ -60,13 +60,25 @@ void	*mort(void *philo)
 		
 		if (actual_time() - time >= filo->data->time_to_die)
 		{	
-			msg(philo, DEAD);
+			
+			
 			pthread_mutex_lock(&filo->data->mutex);
-			filo->data->dead = 1;
+			pthread_mutex_lock(&filo->data->printf);
+			if (filo->data->dead == 0)
+			{
+				filo->data->dead = 1;
+				time = (actual_time() - filo->data->start);
+				ft_putnbr(time);
+				write(1, " ", 1);
+				ft_putnbr(filo->id);
+				ft_putstr(DEAD);
+				pthread_mutex_unlock(&filo->data->printf);
+			}
 			pthread_mutex_unlock(&filo->data->mutex);
 			return (NULL);		
 		}
-		ft_usleep(30, filo, actual_time());
+		//ft_usleep(1, filo, actual_time());
+		usleep(50);
 		pthread_mutex_lock(&filo->change_var);
 		time = filo->eattime;
 		pthread_mutex_unlock(&filo->change_var);
