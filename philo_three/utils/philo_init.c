@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/18 16:17:25 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/23 18:39:44 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,10 @@ philo_t *philo_new(int nb, t_data *data)
 	new->time_eat = 0;
 	new->forks = 0;
 	new->sleep = 0;
-
-	new->eat_time = (struct timeval){ 0 };
 	new->next = NULL;
 	new->prev = NULL;
 	new->data = data;
 	new->data->start_time = (struct timeval){ 0 };
-	new->eattime = actual_time();
 	pthread_mutex_init(&new->change_var, NULL);
 	pthread_mutex_init(&new->fork, NULL);
 	return (new);
@@ -60,16 +57,24 @@ philo_t *philo_init(int argc, char **argv)
 	while (i <= nb_philo)
 	{
 		philo = philo_new(i, data);
+		if (nb_philo == 1)
+			return (philo);
+		if (nb_philo == 2)
+		{
+			tmp2 = philo;
+			philo = philo->next;
+			philo = philo_new(nb_philo, data);
+			philo->prev = tmp2;
+			tmp2->next = philo;
+			tmp2->prev = philo;
+			philo->next = tmp2;
+			return (philo);
+		}
 		if (i == 1)
 		{
 			philo->prev = philo_new(nb_philo, data);
 			tmp2 = philo->prev;
 			philo->prev->next = philo;
-			if (nb_philo == 2)
-			{
-				philo->prev->prev = philo;
-				philo->next = philo->prev;
-			}
 		}
 		else
 		{

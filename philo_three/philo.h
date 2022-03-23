@@ -13,6 +13,7 @@
 # define SLEEP " is sleeping\n"
 # define THINK " is thinking\n"
 # define DEAD " died\n"
+# define DROP " dropped forks\n"
 
 typedef struct s_data t_data;
 struct s_data{
@@ -31,24 +32,22 @@ struct s_data{
 typedef struct philo_s philo_t;
 struct philo_s{
 	int id;
-	int time2;
 	pthread_t philo;
 	pthread_t mortt;
-	pthread_mutex_t change_var;
 	int eat;
 	int time_eat;
 	int forks;
 	int sleep;
 	pthread_mutex_t fork;
+	pthread_mutex_t change_var;
 	philo_t *next;
 	philo_t *prev;
-	struct timeval eat_time;
 	long int eattime;
 	t_data *data;
-
 };
 
 philo_t *philo_init(int argc, char **argv);
+void	*mort(void *philo);
 long int	get_time(struct timeval previous_time);
 void	take_forks(philo_t *philo, struct timeval start_time);
 void	sleeping(philo_t *philo);
@@ -56,5 +55,6 @@ void	ft_usleep(long int i, philo_t *philo, long int time);
 long int actual_time();
 int check_stop(t_data *data);
 void msg(philo_t *philo, char *msg);
+void	ft_destroy(philo_t *philo);
 
 #endif
