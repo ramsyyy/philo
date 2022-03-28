@@ -26,6 +26,7 @@ philo_t *philo_new(int nb, t_data *data)
 	new->next = NULL;
 	new->prev = NULL;
 	new->data = data;
+	new->nb_each = 0;
 	new->data->start_time = (struct timeval){ 0 };
 	pthread_mutex_init(&new->change_var, NULL);
 	pthread_mutex_init(&new->fork, NULL);
@@ -48,10 +49,12 @@ philo_t *philo_init(int argc, char **argv)
 	data->time_to_die = atoi(argv[2]);
 	data->time_to_eat = atoi(argv[3]);
 	data->time_to_sleep = atoi(argv[4]);
+	data->nb_to_each = atoi(argv[5]);
 	data->dead = 0;
 	data->nb = atoi(argv[1]);
 	pthread_mutex_init(&data->printf, NULL);
 	pthread_mutex_init(&data->mutex, NULL);
+	pthread_mutex_init(&data->each, NULL);
 	if(argc == 6)
 		data->nb_to_each = atoi(argv[5]);
 	while (i <= nb_philo)

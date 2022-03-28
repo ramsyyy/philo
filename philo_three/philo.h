@@ -20,10 +20,13 @@ struct s_data{
 	int time_to_die;
 	int time_to_eat;
 	int time_to_sleep;
-	int nb_to_each;
 	pthread_mutex_t printf;
 	pthread_mutex_t mutex;
+	pthread_mutex_t each;
 	struct timeval start_time;
+	int philo_eat;
+	
+	int nb_to_each;
 	long int start;
 	int dead;
 	int nb;
@@ -38,6 +41,7 @@ struct philo_s{
 	int time_eat;
 	int forks;
 	int sleep;
+	int nb_each;
 	pthread_mutex_t fork;
 	pthread_mutex_t change_var;
 	philo_t *next;
@@ -56,5 +60,7 @@ long int actual_time();
 int check_stop(t_data *data);
 void msg(philo_t *philo, char *msg);
 void	ft_destroy(philo_t *philo);
+int parser(int argc, char **argv);
+int check_each(philo_t *philo);
 
 #endif

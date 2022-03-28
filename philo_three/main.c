@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/23 18:43:29 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/25 22:48:31 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,16 @@ int check_stop(t_data *data)
 	return(ret);
 }
 
+int check_each(philo_t *philo)
+{
+	int ret;
+
+	pthread_mutex_lock(&philo->change_var);
+	ret = philo->nb_each;
+	pthread_mutex_unlock(&philo->change_var);
+	return (ret);
+}
+
 void	*routine(void *philo)
 {
 	philo_t *filo;
@@ -42,8 +52,12 @@ void	*routine(void *philo)
 	if (filo->id % 2 == 0)
 		ft_usleep(filo->data->time_to_eat, filo, actual_time());
 	pthread_create(&filo->mortt, NULL, mort, philo);
-	while (check_stop(filo->data) == 0)
+	
+	while (check_stop(filo->data) == 0 || check_each(filo) < filo->data->nb_to_each)
+	{
+		//printf("QWEE %d\n",filo->nb_each);
 		take_forks(filo, filo->data->start_time);
+	}
 	pthread_join(filo->mortt, NULL);
 	return (NULL);
 }
@@ -58,8 +72,9 @@ void	*mort(void *philo)
 	i = 1;
 	filo = (philo_t *)philo;
 	time = actual_time();
-	while (check_stop(filo->data) == 0)
+	while (check_stop(filo->data) == 0 || check_each(filo) < filo->data->nb_to_each)
 	{
+		//printf("QWEE %d < %d\n",filo->nb_each, filo->data->nb_to_each);
 		if (actual_time() - time >= filo->data->time_to_die)
 		{	
 			pthread_mutex_lock(&filo->data->printf);
@@ -80,7 +95,7 @@ void	*mort(void *philo)
 		}
 		usleep(100);
 		pthread_mutex_lock(&filo->change_var);
-		time = filo->eattime;
+			time = filo->eattime;
 		pthread_mutex_unlock(&filo->change_var);
 	}
 	return (NULL);
@@ -119,15 +134,14 @@ int main(int argc, char **argv)
 	int i;
 	int nb;
 
-	if (argc < 5 || argc > 6)
+	if (parser(argc, argv) == 0)
 		return (0);
 	i = 1;
-	if (i <= 0 || i > 200)
-		return (0);
 	nb = atoi(argv[1]);
 	philo = philo_init(argc, argv);
 	philo->data->dead = 0;
 	philo->data->start = actual_time();
+	
 	while (i <= nb)
 	{
 		philo->eattime = actual_time();

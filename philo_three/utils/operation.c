@@ -43,6 +43,7 @@ void	take_forks(philo_t *philo, struct timeval start_time)
 		msg(philo, FORK);
 		pthread_mutex_lock(&philo->change_var);
 		philo->eattime = actual_time();
+		philo->nb_each++;
 		pthread_mutex_unlock(&philo->change_var);
 		msg(philo, EAT);
 		ft_usleep(philo->data->time_to_eat, philo, actual_time());
