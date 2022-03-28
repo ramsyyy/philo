@@ -20,9 +20,7 @@ all : $(NAME)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 $(NAME): $(OBJ)
-		make -C $(PRINTFPATH)
-		mv $(PRINTFPATH)$(PRINTFNAME) $(PRINTFNAME)
-		${CC} -g3 -pthread ${SRC} $(UTILS) $(PRINTFNAME) -o ${NAME}
+		${CC} -g3 -pthread ${SRC} $(UTILS) -o ${NAME}
 
 clean:
 		rm -rf *.o

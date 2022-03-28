@@ -6,16 +6,16 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/23 16:18:54 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/28 17:18:31 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-void msg(philo_t *philo, char *msg)
+void	msg(t_philo *philo, char *msg)
 {
-	long int time;
-	
+	long int	time;
+
 	pthread_mutex_lock(&philo->data->printf);
 	if (check_stop(philo->data) == 1)
 	{
@@ -30,8 +30,7 @@ void msg(philo_t *philo, char *msg)
 	pthread_mutex_unlock(&philo->data->printf);
 }
 
-
-void	take_forks(philo_t *philo, struct timeval start_time)
+void	take_forks(t_philo *philo, struct timeval start_time)
 {
 	long int	time;
 
@@ -47,8 +46,6 @@ void	take_forks(philo_t *philo, struct timeval start_time)
 		pthread_mutex_unlock(&philo->change_var);
 		msg(philo, EAT);
 		ft_usleep(philo->data->time_to_eat, philo, actual_time());
-		pthread_mutex_unlock(&philo->fork);
-		pthread_mutex_unlock(&philo->next->fork);
 		sleeping(philo);
 	}
 	else
@@ -62,8 +59,10 @@ void	take_forks(philo_t *philo, struct timeval start_time)
 	}
 }
 
-void	sleeping(philo_t *philo)
+void	sleeping(t_philo *philo)
 {
+	pthread_mutex_unlock(&philo->fork);
+	pthread_mutex_unlock(&philo->next->fork);
 	msg(philo, SLEEP);
 	ft_usleep(philo->data->time_to_sleep, philo, actual_time());
 	msg(philo, THINK);

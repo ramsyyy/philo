@@ -6,17 +6,17 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/03/23 18:39:44 by raaga            ###   ########.fr       */
+/*   Updated: 2022/03/28 17:27:45 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../philo.h"
 
-philo_t *philo_new(int nb, t_data *data)
+t_philo	*philo_new(int nb, t_data *data)
 {
-	philo_t	*new;
+	t_philo	*new;
 
-	new = malloc(sizeof(philo_t));
+	new = malloc(sizeof(t_philo));
 	if (!new)
 		return (NULL);
 	new->id = nb;
@@ -27,74 +27,93 @@ philo_t *philo_new(int nb, t_data *data)
 	new->prev = NULL;
 	new->data = data;
 	new->nb_each = 0;
-	new->data->start_time = (struct timeval){ 0 };
 	pthread_mutex_init(&new->change_var, NULL);
 	pthread_mutex_init(&new->fork, NULL);
 	return (new);
 }
 
-philo_t *philo_init(int argc, char **argv)
+t_data	*datainit(t_data *data, int argc, char **argv)
 {
-	pthread_t t1[atoi(argv[1])];
-	t_data  *data;
-	philo_t *philo;
-	philo_t *tmp;
-	philo_t *tmp2;
-	int	nb_philo;
-	int	i;
-
-	i = 1;
-	nb_philo = atoi(argv[1]);
 	data = malloc(sizeof(t_data));
-	data->time_to_die = atoi(argv[2]);
-	data->time_to_eat = atoi(argv[3]);
-	data->time_to_sleep = atoi(argv[4]);
-	data->nb_to_each = atoi(argv[5]);
+	data->time_to_die = ft_atoi(argv[2]);
+	data->time_to_eat = ft_atoi(argv[3]);
+	data->time_to_sleep = ft_atoi(argv[4]);
 	data->dead = 0;
-	data->nb = atoi(argv[1]);
+	if (argc > 5)
+		data->nb_to_each = ft_atoi(argv[5]);
+	else
+		data->nb_to_each = 2147483647;
+	data->dead = 0;
+	data->nb = ft_atoi(argv[1]);
 	pthread_mutex_init(&data->printf, NULL);
 	pthread_mutex_init(&data->mutex, NULL);
-	pthread_mutex_init(&data->each, NULL);
-	if(argc == 6)
-		data->nb_to_each = atoi(argv[5]);
-	while (i <= nb_philo)
+	return (data);
+}
+
+t_philo	*philo_onetwo(t_philo *philo, t_data *data)
+{
+	t_philo	*tmp2;
+
+	if (data->nb == 1)
+		return (philo);
+	if (data->nb == 2)
 	{
-		philo = philo_new(i, data);
-		if (nb_philo == 1)
-			return (philo);
-		if (nb_philo == 2)
-		{
-			tmp2 = philo;
-			philo = philo->next;
-			philo = philo_new(nb_philo, data);
-			philo->prev = tmp2;
-			tmp2->next = philo;
-			tmp2->prev = philo;
-			philo->next = tmp2;
-			return (philo);
-		}
-		if (i == 1)
-		{
-			philo->prev = philo_new(nb_philo, data);
-			tmp2 = philo->prev;
-			philo->prev->next = philo;
-		}
-		else
-		{
-			philo->prev = tmp;
-			philo->prev->next = philo;
-			if (i == nb_philo - 1)
-			{
-				philo->next = tmp2;
-				philo->next->prev = philo;
-				break ;
-			}
-		}
-		tmp = philo;
+		tmp2 = philo;
 		philo = philo->next;
-		i++;
+		philo = philo_new(data->nb, data);
+		philo->prev = tmp2;
+		tmp2->next = philo;
+		tmp2->prev = philo;
+		philo->next = tmp2;
+		return (philo);
+	}
+}
+
+int	initing(t_philo **philo, t_data *data, int i)
+{
+	t_philo		*tmp;
+	t_philo		*tmp2;
+
+	*philo = philo_new(i, data);
+	if (i == 1)
+	{
+		(*philo)->prev = philo_new(data->nb, data);
+		tmp2 = (*philo)->prev;
+		(*philo)->prev->next = *philo;
+	}
+	else
+	{
+		(*philo)->prev = tmp;
+		(*philo)->prev->next = *philo;
+		if (i == data->nb - 1)
+		{
+			(*philo)->next = tmp2;
+			(*philo)->next->prev = *philo;
+			return (0);
+		}
+	}
+	tmp = *philo;
+	*philo = (*philo)->next;
+	return (1);
+}
+
+t_philo	*philo_init(int argc, char **argv)
+{
+	t_data		*data;
+	t_philo		*philo;
+	int			i;
+
+	i = 0;
+	data = datainit(data, argc, argv);
+	if (argc == 6)
+		data->nb_to_each = ft_atoi(argv[5]);
+	if (data->nb == 1 || data->nb == 2)
+		return (philo_onetwo(philo, data));
+	while (++i <= data->nb)
+	{
+		if (initing(&philo, data, i) == 0)
+			break ;
 	}
 	philo = philo->next->next;
 	return (philo);
 }
-
