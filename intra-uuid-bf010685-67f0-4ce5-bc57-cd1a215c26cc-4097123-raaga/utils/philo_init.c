@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_init.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:55 by raaga             #+#    #+#             */
-/*   Updated: 2022/04/20 15:33:51 by raaga            ###   ########.fr       */
+/*   Updated: 2022/04/21 02:37:55 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ t_philo	*philo_init(int argc, char **argv)
 	int			i;
 
 	i = 0;
+	philo = NULL;
 	data = NULL;
 	data = datainit(data, argc, argv);
 	if (argc == 6)

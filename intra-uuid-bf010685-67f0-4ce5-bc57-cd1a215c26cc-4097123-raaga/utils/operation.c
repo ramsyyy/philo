@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   operation.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/04/20 17:20:51 by raaga            ###   ########.fr       */
+/*   Updated: 2022/04/21 03:03:23 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	take_forks(t_philo *philo)
 	if (philo->data->nb > 1)
 	{
 		lock_fork(philo);
-		msg(philo, FORK);
 		pthread_mutex_lock(&philo->change_var);
 		philo->eattime = actual_time();
 		philo->nb_each++;
@@ -74,11 +73,14 @@ void	take_forks(t_philo *philo)
 
 void	sleeping(t_philo *philo)
 {
+	
 	if (philo->id % 2 == 0)
 		pthread_mutex_unlock(&philo->prev->fork);
 	else
 		pthread_mutex_unlock(&philo->next->fork);
 	pthread_mutex_unlock(&philo->fork);
+	if (check_each(philo) >= philo->data->nb_to_each)
+		return ;
 	msg(philo, SLEEP);
 	ft_usleep(philo->data->time_to_sleep, philo, actual_time());
 	msg(philo, THINK);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
+/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/04/20 17:36:16 by raaga            ###   ########.fr       */
+/*   Updated: 2022/04/21 03:10:59 by ramsy            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,12 @@ void	stop_thread(t_philo *philo)
 	pthread_mutex_lock(&philo->data->mutex);
 	if (philo->data->dead == 0)
 	{
+		if (check_each(philo) >= philo->data->nb_to_each)
+		{
+			pthread_mutex_unlock(&philo->data->mutex);
+			pthread_mutex_unlock(&philo->data->printf);
+			return ;
+		}
 		philo->data->dead = 1;
 		time = (actual_time() - philo->data->start);
 		ft_putnbr(time);
@@ -59,18 +65,8 @@ void	*mort(void *philo)
 	time = actual_time();
 	while (check_stop(filo->data) == 0)
 	{
-		if (check_each(filo) >= filo->data->nb_to_each && filo->data->nb_to_each != 1)
-		{
-			if (filo->data->nb_to_each == 1)
-			{
-				if (actual_time() - time >= filo->data->time_to_die)
-				{	
-					stop_thread(filo);
-					return (NULL);
-				}
-			}
+		if (check_each(filo) >= filo->data->nb_to_each)
 			return (NULL);
-		}
 		if (actual_time() - time >= filo->data->time_to_die)
 		{	
 			stop_thread(filo);
