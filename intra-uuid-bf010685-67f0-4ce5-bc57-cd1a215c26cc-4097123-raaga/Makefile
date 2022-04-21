@@ -1,4 +1,4 @@
-CC = gcc -Wall -Wextra -Werror #-g3 -fsanitize=thread 
+CC = gcc -Wall -Wextra -Werror -g3 -fsanitize=thread 
 
 NAME = philo
 

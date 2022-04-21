@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   operation.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 15:11:01 by raaga             #+#    #+#             */
-/*   Updated: 2022/04/21 03:03:23 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/04/21 19:35:53 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ void	msg(t_philo *philo, char *msg)
 	pthread_mutex_unlock(&philo->data->printf);
 }
 
+
 void	lock_fork(t_philo *philo)
 {
+	
 	if (philo->id % 2 == 0)
 	{
+		
 		pthread_mutex_lock(&philo->prev->fork);
 		msg(philo, FORK);
 		pthread_mutex_lock(&philo->fork);
@@ -43,7 +46,21 @@ void	lock_fork(t_philo *philo)
 	{
 		pthread_mutex_lock(&philo->fork);
 		msg(philo, FORK);
-		pthread_mutex_lock(&philo->next->fork);
+		pthread_mutex_lock(&philo->next->fork);	
+		msg(philo, FORK);
+		
+	}
+}
+
+void	lock_fork2(t_philo *philo)
+{
+	
+
+	if (philo->id == 1 && )
+	{
+		pthread_mutex_lock(&philo->fork);
+		msg(philo, FORK);
+		pthread_mutex_lock(&philo->next->fork);	
 		msg(philo, FORK);
 	}
 }
@@ -52,7 +69,19 @@ void	take_forks(t_philo *philo)
 {
 	if (philo->data->nb > 1)
 	{
-		lock_fork(philo);
+		if (philo->data->nb == 3)
+		{
+			lock_fork2(philo);
+		}
+		else if (philo->data->nb % 2 == 0)
+			lock_fork(philo);
+		else
+		{
+			pthread_mutex_lock(&philo->next->fork);	
+			msg(philo, FORK);
+			pthread_mutex_lock(&philo->fork);
+			msg(philo, FORK);
+		}
 		pthread_mutex_lock(&philo->change_var);
 		philo->eattime = actual_time();
 		philo->nb_each++;
@@ -73,12 +102,16 @@ void	take_forks(t_philo *philo)
 
 void	sleeping(t_philo *philo)
 {
-	
-	if (philo->id % 2 == 0)
+
+	if (philo->data->nb == 3 && philo ->id == 3)
+		pthread_mutex_unlock(&philo->prev->fork);	
+	else if ((philo->id % 2 == 0 && philo->data->nb % 2 == 0))
 		pthread_mutex_unlock(&philo->prev->fork);
 	else
 		pthread_mutex_unlock(&philo->next->fork);
 	pthread_mutex_unlock(&philo->fork);
+	philo->forks = 0;
+	philo->forks = 0;	
 	if (check_each(philo) >= philo->data->nb_to_each)
 		return ;
 	msg(philo, SLEEP);

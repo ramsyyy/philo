@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ramsy <ramsy@student.42.fr>                +#+  +:+       +#+        */
+/*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/04/21 03:10:59 by ramsy            ###   ########.fr       */
+/*   Updated: 2022/04/21 19:34:13 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	*routine(void *philo)
 
 	filo = (t_philo *)philo;
 	if (filo->id % 2 == 0)
-		ft_usleep(filo->data->time_to_eat / 2 , filo, actual_time());
+		ft_usleep(filo->data->time_to_eat / 2, filo, actual_time());
 	pthread_create(&filo->mortt, NULL, mort, philo);
 	while (check_stop(filo->data) == 0)
 	{
@@ -30,7 +30,7 @@ void	*routine(void *philo)
 	return (NULL);
 }
 
-void	stop_thread(t_philo *philo)
+int	stop_thread(t_philo *philo)
 {
 	long int	time;
 
@@ -38,12 +38,6 @@ void	stop_thread(t_philo *philo)
 	pthread_mutex_lock(&philo->data->mutex);
 	if (philo->data->dead == 0)
 	{
-		if (check_each(philo) >= philo->data->nb_to_each)
-		{
-			pthread_mutex_unlock(&philo->data->mutex);
-			pthread_mutex_unlock(&philo->data->printf);
-			return ;
-		}
 		philo->data->dead = 1;
 		time = (actual_time() - philo->data->start);
 		ft_putnbr(time);
@@ -53,7 +47,7 @@ void	stop_thread(t_philo *philo)
 	}
 	pthread_mutex_unlock(&philo->data->mutex);
 	pthread_mutex_unlock(&philo->data->printf);
-	
+	return (1);
 }
 
 void	*mort(void *philo)
@@ -69,14 +63,16 @@ void	*mort(void *philo)
 			return (NULL);
 		if (actual_time() - time >= filo->data->time_to_die)
 		{	
-			stop_thread(filo);
-			return (NULL);
+			if (stop_thread(filo) == 1)
+				return (NULL);
 		}
-		usleep(100);
+		usleep(50);
 		pthread_mutex_lock(&filo->change_var);
-			time = filo->eattime;
+		time = filo->eattime;
 		pthread_mutex_unlock(&filo->change_var);
+		
 	}
+	printf("GGGGGGGGGGG\n");
 	return (NULL);
 }
 
