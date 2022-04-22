@@ -6,7 +6,7 @@
 /*   By: raaga <raaga@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 17:15:47 by raaga             #+#    #+#             */
-/*   Updated: 2022/04/21 19:34:13 by raaga            ###   ########.fr       */
+/*   Updated: 2022/04/22 18:11:25 by raaga            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,8 @@ void	*mort(void *philo)
 	{
 		if (check_each(filo) >= filo->data->nb_to_each)
 			return (NULL);
-		if (actual_time() - time >= filo->data->time_to_die)
-		{	
+		if (actual_time() - time > filo->data->time_to_die)
+		{
 			if (stop_thread(filo) == 1)
 				return (NULL);
 		}
@@ -72,7 +72,6 @@ void	*mort(void *philo)
 		pthread_mutex_unlock(&filo->change_var);
 		
 	}
-	printf("GGGGGGGGGGG\n");
 	return (NULL);
 }
 
