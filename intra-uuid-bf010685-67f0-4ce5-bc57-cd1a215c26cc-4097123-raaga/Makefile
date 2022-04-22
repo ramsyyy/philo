@@ -18,7 +18,7 @@ OBJ := $(UTILS:%.c=%.o) \
 all : $(NAME)
 
 $(NAME): $(OBJ)
-	@${CC} -pthread $(UTILS:%.c=%.o) -o ${NAME}
+	${CC} -pthread $(UTILS:%.c=%.o) -o ${NAME}
 
 %.o: %.c
 	@echo "compiling" $@
